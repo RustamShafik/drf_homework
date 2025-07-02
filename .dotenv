@@ -1,0 +1,6 @@
+SECRET_KEY=django-insecure-k$qra7^ha1yxne7!3jn-n2@pfq27o#vco^%awtz3ezi9qmbm-9
+NAME=drf-homework
+USER=postgres
+PASSWORD=Metallica01
+HOST=localhost
+PORT=5432
