@@ -38,6 +38,7 @@ class User(AbstractUser):
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
+
 class Payment(models.Model):
     PAYMENT_METHODS = [
         ("cash", "Наличные"),
@@ -45,9 +46,7 @@ class Payment(models.Model):
     ]
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        verbose_name="Пользователь"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
 
     payment_date = models.DateField(verbose_name="Дата оплаты")
@@ -57,7 +56,7 @@ class Payment(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Оплаченный курс"
+        verbose_name="Оплаченный курс",
     )
 
     lesson = models.ForeignKey(
@@ -65,17 +64,13 @@ class Payment(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Оплаченный урок"
+        verbose_name="Оплаченный урок",
     )
 
     amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name="Сумма оплаты"
+        max_digits=10, decimal_places=2, verbose_name="Сумма оплаты"
     )
 
     payment_method = models.CharField(
-        max_length=10,
-        choices=PAYMENT_METHODS,
-        verbose_name="Способ оплаты"
+        max_length=10, choices=PAYMENT_METHODS, verbose_name="Способ оплаты"
     )
