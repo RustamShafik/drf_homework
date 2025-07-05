@@ -35,6 +35,7 @@ class Lesson(models.Model):
         help_text="Выберите курс",
         blank=True,
         null=True,
+        related_name="lessons"
     )
     photo = models.ImageField(
         upload_to="materials/photo",
