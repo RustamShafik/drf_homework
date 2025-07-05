@@ -11,7 +11,7 @@ class Course(models.Model):
         blank=True,
         null=True,
         help_text="Введите описание курса",
-        verbose_name="Описание курса"
+        verbose_name="Описание курса",
     )
     photo = models.ImageField(
         upload_to="materials/photo",
@@ -20,9 +20,11 @@ class Course(models.Model):
         null=True,
         help_text="Загрузите превью курса",
     )
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
+
 
 class Lesson(models.Model):
     name = models.CharField(
@@ -35,6 +37,7 @@ class Lesson(models.Model):
         help_text="Выберите курс",
         blank=True,
         null=True,
+        related_name="lessons",
     )
     photo = models.ImageField(
         upload_to="materials/photo",
