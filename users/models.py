@@ -49,7 +49,7 @@ class Payment(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Пользователь"
     )
 
-    payment_date = models.DateField(verbose_name="Дата оплаты")
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
 
     course = models.ForeignKey(
         Course,
