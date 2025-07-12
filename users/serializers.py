@@ -29,3 +29,31 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "email",
+            "phone",
+            "city",
+            "avatar",
+            "is_active",
+            "is_staff",
+            "is_superuser",
+            "groups",
+        ]
+        read_only_fields = ["id", "is_superuser"]
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "email",
+            "phone",
+            "city",
+            "avatar",
+        ]
+        read_only_fields = ["id", "email"]
