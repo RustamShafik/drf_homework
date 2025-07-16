@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -6,6 +7,14 @@ class Course(models.Model):
         max_length=100,
         verbose_name="Название курса",
         help_text="Укажите название курса",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="courses",
+        verbose_name="Владелец",
+        null=True,
+        blank=True,
     )
     description = models.TextField(
         blank=True,
@@ -38,6 +47,14 @@ class Lesson(models.Model):
         blank=True,
         null=True,
         related_name="lessons",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="lessons",
+        verbose_name="Владелец",
+        null=True,
+        blank=True,
     )
     photo = models.ImageField(
         upload_to="materials/photo",
