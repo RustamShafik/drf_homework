@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import (
     CreateAPIView,
@@ -9,26 +9,20 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from .paginators import StandardResultsSetPagination
-from materials.models import Course, Lesson
+from materials.models import Course, Lesson, Subscription
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwnerOrModer
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from .models import Subscription
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 
 from .stripe_service import (
     create_stripe_product,
     create_stripe_price,
     create_checkout_session,
 )
-from .models import Payment
-from materials.models import Course
+from users.models import Payment
 
 
 class CourseViewSet(ModelViewSet):
@@ -112,11 +106,13 @@ class SubscriptionToggleAPIView(APIView):
 
         return Response({"message": message})
 
+
 class CheckoutSessionAPIView(APIView):
     """
     Создаёт в Stripe Product→Price→Checkout Session,
     сохраняет данные в модели Payment и возвращает клиенту URL оплаты.
     """
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -127,7 +123,9 @@ class CheckoutSessionAPIView(APIView):
         # 2) Stripe: product, price, session
         prod_id = create_stripe_product(course)
         price_id = create_stripe_price(course, prod_id)
-        session_id, checkout_url = create_checkout_session(course, price_id, request.user)
+        session_id, checkout_url = create_checkout_session(
+            course, price_id, request.user
+        )
 
         # 3) Сохраняем запись о платеже
         payment = Payment.objects.create(

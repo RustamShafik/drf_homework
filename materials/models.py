@@ -23,10 +23,7 @@ class Course(models.Model):
         verbose_name="Описание курса",
     )
     price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name="Цена курса",
-        default=0
+        max_digits=10, decimal_places=2, verbose_name="Цена курса", default=0
     )
     photo = models.ImageField(
         upload_to="materials/photo",
@@ -86,6 +83,7 @@ class Lesson(models.Model):
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
 
+
 class Payment(models.Model):
     stripe_product_id = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Stripe Product ID"
@@ -96,9 +94,7 @@ class Payment(models.Model):
     stripe_session_id = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Stripe Session ID"
     )
-    checkout_url = models.URLField(
-        blank=True, null=True, verbose_name="Checkout URL"
-    )
+    checkout_url = models.URLField(blank=True, null=True, verbose_name="Checkout URL")
 
 
 class Subscription(models.Model):

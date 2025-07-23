@@ -10,6 +10,7 @@ from materials.views import (
     LessonRetrieveApiView,
     LessonUpdateApiView,
 )
+from .views import CheckoutSessionAPIView
 
 app_name = MaterialsConfig.name
 
@@ -32,6 +33,9 @@ urlpatterns = [
         "courses/subscribe/",
         SubscriptionToggleAPIView.as_view(),
         name="course_subscribe",
+    ),
+    path(
+        "payments/checkout/", CheckoutSessionAPIView.as_view(), name="payments_checkout"
     ),
 ]
 
