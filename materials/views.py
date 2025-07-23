@@ -17,6 +17,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Subscription
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+
+from .stripe_service import (
+    create_stripe_product,
+    create_stripe_price,
+    create_checkout_session,
+)
+from .models import Payment
+from materials.models import Course
 
 
 class CourseViewSet(ModelViewSet):
@@ -99,3 +111,35 @@ class SubscriptionToggleAPIView(APIView):
             message = "Подписка добавлена"
 
         return Response({"message": message})
+
+class CheckoutSessionAPIView(APIView):
+    """
+    Создаёт в Stripe Product→Price→Checkout Session,
+    сохраняет данные в модели Payment и возвращает клиенту URL оплаты.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # 1) Получаем ID курса из запроса
+        course_id = request.data.get("course")
+        course = get_object_or_404(Course, pk=course_id)
+
+        # 2) Stripe: product, price, session
+        prod_id = create_stripe_product(course)
+        price_id = create_stripe_price(course, prod_id)
+        session_id, checkout_url = create_checkout_session(course, price_id, request.user)
+
+        # 3) Сохраняем запись о платеже
+        payment = Payment.objects.create(
+            user=request.user,
+            course=course,
+            amount=course.price,
+            payment_method="stripe",
+            stripe_product_id=prod_id,
+            stripe_price_id=price_id,
+            stripe_session_id=session_id,
+            checkout_url=checkout_url,
+        )
+
+        # 4) Отдаём клиенту ссылку на оплату
+        return Response({"checkout_url": checkout_url})
