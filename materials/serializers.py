@@ -7,10 +7,9 @@ from .models import Subscription
 
 class LessonSerializer(ModelSerializer):
     video_link = serializers.CharField(
-        allow_blank=True,
-        required=False,
-        validators=[validate_youtube_link]
+        allow_blank=True, required=False, validators=[validate_youtube_link]
     )
+
     class Meta:
         model = Lesson
         fields = "__all__"
@@ -33,6 +32,7 @@ class CourseSerializer(ModelSerializer):
         if user.is_anonymous:
             return False
         return obj.subscribers.filter(user=user).exists()
+
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:

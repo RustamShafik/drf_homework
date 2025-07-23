@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from .paginators import StandardResultsSetPagination
@@ -78,6 +82,7 @@ class LessonDestroyApiView(DestroyAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrModer]
 
+
 class SubscriptionToggleAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -94,4 +99,3 @@ class SubscriptionToggleAPIView(APIView):
             message = "Подписка добавлена"
 
         return Response({"message": message})
-
