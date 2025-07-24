@@ -75,3 +75,17 @@ class Payment(models.Model):
     payment_method = models.CharField(
         max_length=10, choices=PAYMENT_METHODS, verbose_name="Способ оплаты"
     )
+
+    # Stripe fields
+    stripe_product_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Stripe Product ID"
+    )
+    stripe_price_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Stripe Price ID"
+    )
+    stripe_session_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Stripe Session ID"
+    )
+    checkout_url = models.URLField(
+        max_length=500, blank=True, null=True, verbose_name="Checkout URL"
+    )

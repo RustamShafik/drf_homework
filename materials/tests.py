@@ -6,6 +6,7 @@ from materials.models import Course, Lesson, Subscription
 
 User = get_user_model()
 
+
 class MaterialsAPITestCase(TestCase):
     def setUp(self):
         self.moder_group, _ = Group.objects.get_or_create(name="Модераторы")
@@ -32,7 +33,7 @@ class MaterialsAPITestCase(TestCase):
         resp = self.client.post(
             "/materials/lessons/create/",
             {"name": "New Lesson", "course": self.course.id},
-            format="json"
+            format="json",
         )
         self.assertEqual(resp.status_code, 201)
         new_lesson_id = resp.data["id"]
@@ -48,7 +49,7 @@ class MaterialsAPITestCase(TestCase):
         resp = self.client.patch(
             f"/materials/lessons/{self.lesson.id}/update/",
             {"name": "Updated Lesson"},
-            format="json"
+            format="json",
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data["name"], "Updated Lesson")
@@ -62,14 +63,14 @@ class MaterialsAPITestCase(TestCase):
         resp = self.client.post(
             "/materials/lessons/create/",
             {"name": "Mod Lesson", "course": self.course.id},
-            format="json"
+            format="json",
         )
         self.assertEqual(resp.status_code, 403)
 
         resp = self.client.patch(
             f"/materials/lessons/{self.lesson.id}/update/",
             {"name": "Mod Updated"},
-            format="json"
+            format="json",
         )
         self.assertEqual(resp.status_code, 200)
 
@@ -83,9 +84,7 @@ class MaterialsAPITestCase(TestCase):
         self.assertFalse(resp.data["is_subscribed"])
 
         resp = self.client.post(
-            "/materials/courses/subscribe/",
-            {"course": self.course.id},
-            format="json"
+            "/materials/courses/subscribe/", {"course": self.course.id}, format="json"
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data["message"], "Подписка добавлена")
@@ -94,14 +93,13 @@ class MaterialsAPITestCase(TestCase):
         self.assertTrue(resp.data["is_subscribed"])
 
         resp = self.client.post(
-            "/materials/courses/subscribe/",
-            {"course": self.course.id},
-            format="json"
+            "/materials/courses/subscribe/", {"course": self.course.id}, format="json"
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data["message"], "Подписка удалена")
 
         resp = self.client.get(f"/materials/courses/{self.course.id}/")
         self.assertFalse(resp.data["is_subscribed"])
+
 
 # Create your tests here.
