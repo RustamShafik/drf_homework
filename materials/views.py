@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.exceptions import PermissionDenied
+from .tasks import send_course_update_email
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -39,6 +40,11 @@ class CourseViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        send_course_update_email.delay(course.id)
+        return course
 
 
 class LessonCreateApiView(CreateAPIView):
